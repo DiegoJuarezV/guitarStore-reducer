@@ -1,24 +1,20 @@
-import { useState } from "react";
-import { db } from "../utils/dbGuitar";
 import Card from "./Card";
-import type {Guitar, CartItem } from "../types";
+import { ActivityAction, CartState } from "../reducers/cart-reducer";
 
 type HomeProps = {
-  cart: CartItem[]
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
+  state: CartState
+  dispatch: React.Dispatch<ActivityAction> 
 }
 
-const Home = ({ cart, setCart } : HomeProps) => {
-  const [data] = useState<Guitar[]>(db);
+const Home = ({ state, dispatch } : HomeProps) => {
 
   return (
     <>
-      {data.map((guitar) => (
+      {state.data.map((guitar) => (
         <Card 
           key={guitar.id} 
-          dataGuitar={guitar} 
-          cart={cart} 
-          setCart={setCart} 
+          dataGuitar={guitar}
+          dispatch={dispatch} 
         />
       ))}
     </>
