@@ -1,27 +1,24 @@
+import { ActivityAction } from "../reducers/cart-reducer";
 import type { CartItem } from "../types";
 
 type CartProps = {
   cartGuitar: CartItem
-  setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
+  dispatch: React.Dispatch<ActivityAction>
 }
 
-const Cart = ({ cartGuitar, setCart } : CartProps) => {
-  const { id, image, name, price, quantity } = cartGuitar;
+const Cart = ({ cartGuitar, dispatch } : CartProps) => {
+  const { image, name, price, quantity } = cartGuitar;
 
   const removeItem = () => {
-    setCart((prev) => prev.filter(guitar => guitar.id !== id))
+    dispatch({ type: 'REMOVE_FROMCART', payload: { id: cartGuitar.id } })
   }
 
   const increaseItem = () => {
-    setCart((prev) => prev.map(guitar => 
-      guitar.id === id && guitar.quantity < 5 ? { ...guitar, quantity: guitar.quantity + 1 } : guitar
-    ))
+    dispatch({ type: 'INCREASE_QUANTITY', payload: { id: cartGuitar.id } })
   }
 
   const decreaseItem = () => {
-    setCart((prev) => prev.map(guitar => 
-      guitar.id === id && guitar.quantity > 1 ? { ...guitar, quantity: guitar.quantity - 1 } : guitar
-    ))
+    dispatch({ type: 'DECREASE_QUANTITY', payload: { id: cartGuitar.id } })
   }
 
   return (

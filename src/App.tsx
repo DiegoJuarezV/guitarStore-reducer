@@ -1,23 +1,21 @@
-import { useEffect, useReducer, useState } from "react";
-import type { CartItem } from "./types";
+import { useEffect, useReducer } from "react";
 import Header from "./Components/Header";
 import Home from "./Components/Home";
 import { cartReducer, initialState } from "./reducers/cart-reducer";
 
 function App() {
-  const lsCart : CartItem[] = JSON.parse(localStorage.getItem("cart") || '[]');
-
-  const [cart, setCart] = useState(lsCart);
-
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart])
+    localStorage.setItem("cart", JSON.stringify(state.cart));
+  }, [state.cart])
 
   return (
     <>
-      <Header cart={cart} setCart={setCart} />
+      <Header 
+        state={state.cart} 
+        dispatch={dispatch} 
+      />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
         <div className="row mt-5">

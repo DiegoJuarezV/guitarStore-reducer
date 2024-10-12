@@ -1,6 +1,8 @@
 import { CartItem, Guitar } from "../types";
 import { db } from "../utils/dbGuitar";
 
+const lsCart : CartItem[] = JSON.parse(localStorage.getItem("cart") || '[]');
+
 export type ActivityAction = 
   { type: "ADD_CART", payload: { guitar: Guitar }} |
   { type: "REMOVE_FROMCART", payload: { id: Guitar['id'] }} |
@@ -15,7 +17,7 @@ export type CartState = {
 
 export const initialState: CartState = {
   data: db,
-  cart: []
+  cart: lsCart
 }
 
 export const cartReducer = (state: CartState = initialState, action: ActivityAction) => {
@@ -28,5 +30,23 @@ export const cartReducer = (state: CartState = initialState, action: ActivityAct
       ) : [ ...state.cart, { ...action.payload.guitar, quantity: 1 }]
       return { ...state, cart: updatedCart }
     }
+    case "REMOVE_FROMCART": {
+      const updatedRemoveCart = state.cart.filter((item) => item.id !== action.payload.id)
+      return { ...state, cart: updatedRemoveCart }
+    }
+    case "INCREASE_QUANTITY":{
+      const updatedIncrease = state.cart.map((guitar) => 
+        guitar.id === action.payload.id && guitar.quantity < 5 ? { ...guitar, quantity: guitar.quantity + 1 } : guitar
+      )
+      return { ...state, cart: updatedIncrease }
+    }
+    case "DECREASE_QUANTITY": {
+      const updatedDecrease = state.cart.map((guitar) => 
+        guitar.id === action.payload.id && guitar.quantity > 1 ? { ...guitar, quantity: guitar.quantity - 1 } : guitar
+      )
+      return { ...state, cart: updatedDecrease }
+    }
+    case "CLEAR_CART":
+      return { ...state, cart: [] }
   }
 }
