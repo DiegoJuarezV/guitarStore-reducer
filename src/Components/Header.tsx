@@ -1,16 +1,15 @@
 import { useMemo } from "react";
 import Cart from "./Cart";
-import type { CartItem } from "../types";
-import { ActivityAction } from "../reducers/cart-reducer";
+import { ActivityAction, CartState } from "../reducers/cart-reducer";
 
 type HeaderProps = {
-  state: CartItem[]
+  state: CartState
   dispatch: React.Dispatch<ActivityAction>
 }
 
 const Header = ({ state, dispatch } : HeaderProps) => {
-  const isEmpty = useMemo(() => state.length === 0, [state]);
-  const cartTotal = useMemo(() => state.reduce((total, item) => total + (item.quantity * item.price), 0), [state]);
+  const isEmpty = useMemo(() => state.cart.length === 0, [state.cart]);
+  const cartTotal = useMemo(() => state.cart.reduce((total, item) => total + (item.quantity * item.price), 0), [state.cart]);
 
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' })
@@ -53,7 +52,7 @@ const Header = ({ state, dispatch } : HeaderProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {state.map((guitar) => (
+                      {state.cart.map((guitar) => (
                         <Cart 
                           key={guitar.id} 
                           cartGuitar={guitar}

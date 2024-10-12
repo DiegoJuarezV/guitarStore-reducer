@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Header 
-        state={state.cart} 
+        state={state} 
         dispatch={dispatch} 
       />
       <main className="container-xl mt-5">
